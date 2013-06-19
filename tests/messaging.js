@@ -87,12 +87,12 @@ describe('Messaging', function() {
   describe('send', function() {
     it('should send and retrieve a string on the queue', function(done) {
       var body = 'Hello, World!';
-      messaging.sendRaw(qname, body, function(err, msgid)
+      messaging.sendString(qname, body, function(err, msgid)
       {
         should.not.exist(err);
         should.exist(msgid);
 
-        messaging.receiveRaw(qname, function(err, msg) {
+        messaging.receiveString(qname, function(err, msg) {
           should.not.exist(err);
           should.exist(msg);
           msg.id.should.equal(msgid);
@@ -116,6 +116,14 @@ describe('Messaging', function() {
           msg.body.should.eql(body);
           done();
         });
+      });
+    });
+
+    it('should receive nothing from the empty queue', function(done) {
+      messaging.receive(qname, function(err, msg) {
+        should.not.exist(err);
+        should.not.exist(msg);
+        done();
       });
     });
   });
