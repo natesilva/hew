@@ -11,7 +11,8 @@ In the HP Cloud DNS system, domain names must be **fully-qualified**. This means
 In many cases, Hew will silently add the missing period to the end of your domain names, but it’s better to explicitly include it.
 
 :x: example.com
-:white_check_mark example.com.
+
+:white_check_mark: example.com.
 
 ## Constructor
 
