@@ -1,7 +1,7 @@
 {
   "author": "Nate Silva <nate@natesilva.com> (http://natesilva.com/)",
   "name": "hew",
-  "description": "Interface to the HP Cloud API",
+  "description": "Unofficial interface to the HP Cloud API",
   "version": "0.0.1",
   "homepage": "https://github.com/natesilva/hew",
   "repository": {
@@ -29,7 +29,7 @@
     "async": "~0.2.9"
   },
   "engines": {
-    "node": "*"
+    "node": ">=0.8.6"
   },
   "author": "Nate Silva <nate@natesilva.com>",
   "license": "BSD"

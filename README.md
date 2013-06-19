@@ -25,7 +25,7 @@ For clarity, examples use the popular [`async`](https://npmjs.org/package/async)
 var Hew = require('hew')
   , async = require('async')
   ;
-  
+
 // things you need to set
 var yourRegion = Hew.DEFAULT_REGION;
 var yourAccessKey = '…';
@@ -81,4 +81,5 @@ function(err) {
 1. Create `tests/config.json` (an example is provided).
 1. Add the following key to `tests/config.json`:
   * `"i-created-this-account-for-testing-only": true`
+1. From the the top of the repo, run `npm install`.
 1. From the the top of the repo, run `npm test`.
