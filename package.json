@@ -1,12 +1,13 @@
 {
+  "author": "Nate Silva <nate@natesilva.com> (http://natesilva.com/)",
   "name": "hew",
-  "version": "0.0.1",
   "description": "Interface to the HP Cloud API",
-  "main": "index.js",
-  "scripts": {
-    "test": "./node_modules/.bin/mocha -s 5000 -t 5000 tests"
+  "version": "0.0.1",
+  "homepage": "https://github.com/natesilva/hew",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/natesilva/hew.git"
   },
-  "repository": "",
   "keywords": [
     "hp",
     "cloud",
@@ -15,6 +16,10 @@
     "openstack",
     "marconi"
   ],
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha -s 5000 -t 5000 tests"
+  },
   "dependencies": {
     "request": "2.21.0"
   },
@@ -22,6 +27,9 @@
     "mocha": "~1.10.0",
     "should": "~1.2.2",
     "async": "~0.2.9"
+  },
+  "engines": {
+    "node": "*"
   },
   "author": "Nate Silva <nate@natesilva.com>",
   "license": "BSD"
