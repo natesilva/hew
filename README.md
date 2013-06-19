@@ -1,6 +1,6 @@
 # Hew
 
-Unofficial Node interface to [HP Cloud](https://www.hpcloud.com/). (The official interface is [here](https://github.com/hpcloud/hpcloud-js).)
+Unofficial Node interface to [HP Cloud](https://www.hpcloud.com/). (The official interface is [here](http://hpcloud.github.io/hpcloud-js/).)
 
 ## Status
 
