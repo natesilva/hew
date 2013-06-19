@@ -13,8 +13,6 @@ Currently Hew supports a subset of the [HP Cloud API](http://docs.hpcloud.com/ap
 * ✔ DNS — *complete*
 * Identity — in progress
 
-See `api.md`.
-
 ## Install
 
     npm install hew
