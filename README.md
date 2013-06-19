@@ -2,6 +2,8 @@
 
 Unofficial Node interface to [HP Cloud](https://www.hpcloud.com/). (The official interface is [here](http://hpcloud.github.io/hpcloud-js/).)
 
+[**Hew API Documentation**](docs/index.md)
+
 ## Status
 
 Currently Hew supports a subset of the [HP Cloud API](http://docs.hpcloud.com/api/):
