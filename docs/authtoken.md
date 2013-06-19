@@ -1,5 +1,9 @@
 # Hew Documentation: AuthToken
 
+## Status
+
+✔ Complete: All planned methods for this class are implemented and have unit tests.
+
 ## Constructor
 
 #### AuthToken(region, accessKey, secretKey, [tenant])
@@ -15,7 +19,7 @@ Create an authentication token. The actual authentication does not happen immedi
 * **`tenant`**
   - Also known as “project” in some parts of the HP Cloud interface.
   - Can be specified either as the tenant name or as the tenant numeric ID.
-
+  - If not specified, you will be authenticated without a tenant (project) and will not have access to most services, because services in HP Cloud are generally associated with specific tenants.
 
 ## Methods
 

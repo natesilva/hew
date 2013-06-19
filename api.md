@@ -56,11 +56,11 @@
     ✔ listQueues(cb)
     ✔ createQueue(qname, cb)
     ✔ deleteQueue(qname, cb)
-    ✔ send(qname, message)
+    ✔ send(qname, message, cb)
         - message is auto-serialized to JSON
-    ✔ receive(qname)
+    ✔ receive(qname, cb)
         - message is auto-parsed from JSON
-    ✔ sendRaw(qname, message)
+    ✔ sendString(qname, message, cb)
         - message is native (must be a string)
-    ✔ receiveRaw(qname)
+    ✔ receiveString(qname, cb)
         - message is native (returned as a string)
