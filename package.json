@@ -1,0 +1,28 @@
+{
+  "name": "hew",
+  "version": "0.0.1",
+  "description": "Interface to the HP Cloud API",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha -s 5000 -t 5000 tests"
+  },
+  "repository": "",
+  "keywords": [
+    "hp",
+    "cloud",
+    "hpcloud",
+    "messaging",
+    "openstack",
+    "marconi"
+  ],
+  "dependencies": {
+    "request": "2.21.0"
+  },
+  "devDependencies": {
+    "mocha": "~1.10.0",
+    "should": "~1.2.2",
+    "async": "~0.2.9"
+  },
+  "author": "Nate Silva <nate@natesilva.com>",
+  "license": "BSD"
+}
