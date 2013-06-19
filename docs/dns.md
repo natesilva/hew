@@ -139,7 +139,7 @@ Retrieve a list of the assigned nameservers for the given domain.
 **Example Response:**
 
 ```json
-[ "ns4-65.akam.net.", "ns7-67.akam.net.", "ns6-66.akam.net.", "ns5-66.akam.net.", "ns2-64.akam.net.", "ns3-65.akam.net." ]
+[ "ns4-65.akam.net.", "ns7-67.akam.net.", "ns6-66.akam.net." ]
 ```
 
 #### createRecord(dname, recordName, type, data, [ttl], [priority], callback)
@@ -200,7 +200,7 @@ Return an array of all records matching the specification. For example, if you h
 ```json
 [
      {
-       "id": "2e32e609-3a4f-45ba-bdef-e50eacd345ad"
+       "id": "2e32e609-3a4f-45ba-bdef-e50eacd345ad",
        "name": "www.example.com.",
        "type": "A",
        "ttl": 3600,
@@ -213,7 +213,7 @@ Return an array of all records matching the specification. For example, if you h
        "version": 1
      },
      {
-       "id": "8e9ecf3e-fb92-4a3a-a8ae-7596f167bea3"
+       "id": "8e9ecf3e-fb92-4a3a-a8ae-7596f167bea3",
        "name": "www.example.com.",
        "type": "A",
        "ttl": 3600,
@@ -241,7 +241,7 @@ Return the metadata for one DNS record.
 * **`callback`**
   - `function(err, recordMetadata)`
 
-#### updateRecord[…](dname, recordId, newValue, callback)
+#### updateRecord\[…\](dname, recordId, newValue, callback)
 
 This set of related methods can be used to update an existing DNS record.
 
@@ -295,7 +295,7 @@ Return an array of all resource records for the given domain.
 ```json
 [
      {
-       "id": "2e32e609-3a4f-45ba-bdef-e50eacd345ad"
+       "id": "2e32e609-3a4f-45ba-bdef-e50eacd345ad",
        "name": "www.example.com.",
        "type": "A",
        "ttl": 3600,
@@ -308,7 +308,7 @@ Return an array of all resource records for the given domain.
        "version": 1
      },
      {
-       "id": "8e9ecf3e-fb92-4a3a-a8ae-7596f167bea3"
+       "id": "8e9ecf3e-fb92-4a3a-a8ae-7596f167bea3",
        "name": "www.example.com.",
        "type": "A",
        "ttl": 3600,
@@ -321,7 +321,7 @@ Return an array of all resource records for the given domain.
        "version": 1
      },
      {
-       "id": "4ad19089-3e62-40f8-9482-17cc8ccb92cb"
+       "id": "4ad19089-3e62-40f8-9482-17cc8ccb92cb",
        "name": "web.example.com.",
        "type": "CNAME",
        "ttl": 3600,
