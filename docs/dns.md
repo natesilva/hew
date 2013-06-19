@@ -187,7 +187,7 @@ Return an array of all records matching the specification. For example, if you h
 * **`dname`**
 * **`recordName`**
   - DNS record name to look for.
-  - All records with this name (and matching the other specifications you specify) will be returned.
+  - All records with this name (and matching the other criteria) will be returned.
   - In DNS, record names are not necessarily unique. For example, there can be multiple `A` records for a given name.
 * **`type`**
   - DNS record type: `A`, `AAAA`, `CNAME`, `MX`, `SRV`, `TXT`
