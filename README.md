@@ -1,15 +1,15 @@
 # Hew
 
-Unofficial Node interface to [HP Cloud](https://docs.hpcloud.com/api/). (The official interface is [here](https://github.com/hpcloud/hpcloud-js).)
+Unofficial Node interface to [HP Cloud](https://www.hpcloud.com/). (The official interface is [here](https://github.com/hpcloud/hpcloud-js).)
 
 ## Status
 
-Currently Hew supports a subset of the HP Cloud API:
+Currently Hew supports a subset of the [HP Cloud API](http://docs.hpcloud.com/api/):
 
-* ✔ Authentication Tokens (**complete**)
-* ✔ Messaging (**complete**)
-* Identity (in progress)
-* DNS (in progress)
+* ✔ Authentication Tokens — *complete*
+* ✔ Messaging — *complete*
+* Identity — in progress
+* DNS — in progress
 
 See `api.md`.
 
@@ -25,23 +25,30 @@ For clarity, examples use the popular [`async`](https://npmjs.org/package/async)
 var Hew = require('hew')
   , async = require('async')
   ;
+  
+// things you need to set
+var yourRegion = Hew.DEFAULT_REGION;
+var yourAccessKey = '…';
+var yourSecretKey = '…';
+var yourTenantName = '…';
+var qname = 'my-test-message-queue';
 
 // obtain an authentication token
-var token = new Hew.AuthToken(Hew.DEFAULT_REGION, yourAccessKey, yourSecretKey,
+var token = new Hew.AuthToken(yourRegion, yourAccessKey, yourSecretKey,
   yourTenantName);
 
+// create a Messaging controller
 var messaging = new Hew.Messaging(token);
-var qname = 'foo-testing';
 
 async.series([
-
-  // create a queue for testing
+  // create the test queue
   function(cb) { messaging.createQueue(qname, cb); },
 
   // post a message to the queue
   function(cb) {
     var message = {
       temperature: 22,
+      scale: 'Celsius',
       weather: 'sunny'
     };
     messaging.send(qname, message, cb);
@@ -56,9 +63,8 @@ async.series([
     });
   },
 
-  // delete the queue
+  // delete the test queue
   function(cb) { messaging.deleteQueue(qname, cb); }
-
 ],
 function(err) {
   if (err) { console.error('error:', err); }
@@ -73,6 +79,6 @@ function(err) {
 
 1. Check out the Hew git repo.
 1. Create `tests/config.json` (an example is provided).
-1. **Add the following key to `tests/config.json`:**
+1. Add the following key to `tests/config.json`:
   * `"i-created-this-account-for-testing-only": true`
 1. From the the top of the repo, run `npm test`.
