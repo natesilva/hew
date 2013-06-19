@@ -2,7 +2,7 @@
 
 ## Constructor
 
-### **`AuthToken(region, accessKey, secretKey, [tenant])`**
+#### AuthToken(region, accessKey, secretKey, [tenant])
 
 Create an authentication token. The actual authentication does not happen immediately (“lazy auth”), but will happen as-needed when other methods are called or when the current token expires.
 
@@ -19,7 +19,7 @@ Create an authentication token. The actual authentication does not happen immedi
 
 ## Methods
 
-### **`getTokenId(callback)`**
+#### getTokenId(callback)
 
 Primarily for internal use by other classes. Retrieves the current auth token ID, which can be passed as the `X-Auth-Token` header for authenticated requests.
 
@@ -28,7 +28,7 @@ Primarily for internal use by other classes. Retrieves the current auth token ID
 * **`callback`**
   - `function(err, tokenId)`
 
-### **`getServiceEndpoint(serviceType, versionId, callback)`**
+#### getServiceEndpoint(serviceType, versionId, callback)
 
 Primarily for internal use by other classes. Retrieve the given service endpoint for the current region. The `callback` receives `null` if no matching endpoint is found.
 
