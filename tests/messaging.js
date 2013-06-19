@@ -10,7 +10,7 @@ var should = require('should')
 
 try {
   var config = require('./config.json');
-  if (!config['i-created-this-account-for-testing-only'] === true) {
+  if (config['i-created-this-account-for-testing-only'] !== true) {
     console.error('Do not run tests against a live account. Please see the ' +
       'README.md file');
     process.exit(1);

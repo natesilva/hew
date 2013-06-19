@@ -8,8 +8,8 @@ Currently Hew supports a subset of the [HP Cloud API](http://docs.hpcloud.com/ap
 
 * ✔ Authentication Tokens — *complete*
 * ✔ Messaging — *complete*
+* ✔ DNS — *complete*
 * Identity — in progress
-* DNS — in progress
 
 See `api.md`.
 

@@ -39,11 +39,15 @@
     ✔ updateDomain(dname, email, [ttl], cb)
     ✔ deleteDomain(dname, cb)
     ✔ getServers(dname, cb)
-    … createRecord(dname, record_name, type, data, [priority], cb)
-    … getRecord(dname, record_id, cb)
-    … updateRecord(dname, record_id, record_name, type, data, [priority], cb)
-    … deleteRecord(dname, record_id, cb)
-    … listRecords(dname, cb)
+    ✔ createRecord(dname, record_name, type, data, [ttl], [priority], cb)
+    ✔ findRecords(dname, record_name, type, cb)
+    ✔ getRecord(dname, record_id, cb)
+    ✔ updateRecordName(dname, record_id, new_name, cb);
+    ✔ updateRecordData(dname, record_id, new_data, cb);
+    ✔ updateRecordTtl(dname, record_id, new_ttl, cb);
+    ✔ updateRecordPriority(dname, record_id, new_priority, cb);
+    ✔ deleteRecord(dname, record_id, cb)
+    ✔ listRecords(dname, cb)
 
 ## Messaging
 
