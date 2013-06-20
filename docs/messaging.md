@@ -73,8 +73,7 @@ Post a JSON message to the named queue.
   - Any data that can be serialized to JSON.
   - To do your own serialization, see `sendString`.
 * **`callback`**
-  - function(err, response)
-  - The response contains metadata about the posted message, including its `id`.
+  - function(err, message_id)
 
 #### receive(qname, callback)
 
@@ -109,8 +108,7 @@ In most cases, use the `send` method instead, which auto-serializes using JSON.
 * **`body`**
   - must be a string
 * **`callback`**
-  - `function(err, response)`
-  - The response contains metadata about the posted message, including its `id`.
+  - `function(err, message_id)`
 
 #### receiveString(qname, callback)
 
