@@ -60,9 +60,7 @@ describe('Messaging', function() {
         // verify queue exists
         messaging.listQueues(function(err, result) {
           should.not.exist(err);
-          var exists = result.some(function(x) {
-            return (x.name === newq);
-          });
+          var exists = result.some(function(x) { return (x === newq); });
           exists.should.be.true;
 
           // delete the queue
@@ -72,9 +70,7 @@ describe('Messaging', function() {
             // verify queue was deleted
             messaging.listQueues(function(err, result) {
               should.not.exist(err);
-              var exists = result.some(function(x) {
-                return (x.name === newq);
-              });
+              var exists = result.some(function(x) { return (x === newq); });
               exists.should.be.false;
               done();
             });
