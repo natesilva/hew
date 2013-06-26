@@ -1,7 +1,0 @@
---package ./package.json
---output ./docs
---exclude 'node_modules/**'
---exclude 'tests/**'
---exclude 'doc_renderer/**'
---index README.md
---gh-ribbon https://github.com/natesilva/hew

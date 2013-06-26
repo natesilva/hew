@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Classes",
+    "groups": [
+      {
+        "name": "Authentication",
+        "classes": [ "AuthToken" ]
+      },
+      {
+        "name": "Services",
+        "classes": [ "DNS", "Identity", "Messaging" ]
+      }
+    ]
+  }
+]

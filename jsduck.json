@@ -1,0 +1,8 @@
+{
+  "--title": "Hew: A Node.js API for HP Cloud",
+  "--output": "docs",
+  "--ignore-global": true,
+  "--welcome": "README.md",
+  "--categories": "jsduck-categories.json",
+  "--": [ "lib" ]
+}
