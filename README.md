@@ -31,7 +31,7 @@ Currently Hew supports a subset of the [HP Cloud API](http://docs.hpcloud.com/ap
 
 Example showing use of the Messaging module:
 
-```
+```js
 var Hew = require('hew');
 
 var yourRegion = Hew.AuthToken.DEFAULT_REGION;

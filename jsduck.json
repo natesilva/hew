@@ -2,7 +2,7 @@
   "--title": "Hew: A Node.js API for HP Cloud",
   "--output": "../hew-gh-pages/docs",
   "--ignore-global": true,
-  "--welcome": "README.md",
+  "--welcome": "jsduck-index.md",
   "--categories": "jsduck-categories.json",
   "--": [ "lib" ]
 }
