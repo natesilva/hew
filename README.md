@@ -6,7 +6,11 @@ Hew provides a Node.js API for [HP Cloud](https://www.hpcloud.com/).
 
 ## API Documentation
 
-**Hew API Documentation** is [here](#!/api).
+**Hew API Documentation** is at: <http://natesilva.github.io/hew/docs/#!/api>.
+
+## Github
+
+The Hew Github repository is at: <https://github.com/natesilva/hew>.
 
 ### Coverage
 
@@ -15,6 +19,8 @@ Currently Hew supports a subset of the [HP Cloud API](http://docs.hpcloud.com/ap
 * **Authentication Tokens**
 * **Messaging**
 * **DNS**
+* **Object Storage**
+* **CDN** (partial)
 * **Identity** (partial)
 
 ### Installation
