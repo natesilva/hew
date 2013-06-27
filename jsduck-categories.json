@@ -8,7 +8,20 @@
       },
       {
         "name": "Services",
-        "classes": [ "DNS", "Identity", "Messaging" ]
+        "classes": [
+          "DNS",
+          "Identity",
+          "Messaging",
+          "ObjectStorage",
+          "Container"
+        ]
+      },
+      {
+        "name": "Object Storage",
+        "classes": [
+          "ObjectStorage",
+          "Container"
+        ]
       }
     ]
   }
