@@ -8,6 +8,7 @@ var should = require('should')
   , crypto = require('crypto')
   , fs = require('fs')
   , Stream = require('stream')
+  , path = require('path')
   ;
 
 try {
@@ -128,7 +129,7 @@ describe('Object Storage', function() {
 
     it('should upload and download a file as a Buffer', function(done)
     {
-      var contents = fs.readFileSync('./objectStorage.js');
+      var contents = fs.readFileSync(path.join(__dirname, 'objectStorage.js'));
       contents.should.be.an.instanceOf(Buffer);
       container.put('objectStorage.js', contents, 'application/javascript',
         function(err)
@@ -160,7 +161,7 @@ describe('Object Storage', function() {
 
     it('should upload and download a file as a Stream', function(done)
     {
-      var contents = fs.createReadStream('./dns.js');
+      var contents = fs.createReadStream(path.join(__dirname, 'dns.js'));
       contents.should.be.an.instanceOf(Stream);
       container.putStream('dns.js', contents,
         'application/javascript', function(err)
@@ -178,7 +179,7 @@ describe('Object Storage', function() {
           str.on('data', function(chunk) { hash1.update(chunk); });
           str.on('end', function() {
             var hash2 = crypto.createHash('sha1');
-            var contents = fs.createReadStream('./dns.js');
+            var contents = fs.createReadStream(path.join(__dirname, 'dns.js'));
 
             contents.on('error', done);
             contents.on('data', function(chunk) { hash2.update(chunk); });
