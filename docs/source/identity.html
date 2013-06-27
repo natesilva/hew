@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">var transport = require('../transport')
+  , NotProvisioned = require('../errors').NotProvisioned
+  ;
+
+var SERVICE_TYPE = 'identity';
+var SERVICE_VERSION = '2.0';
+
+<span id='Identity-method-constructor'><span id='Identity'>/**
+</span></span> * # Interface to HP Cloud Identity service
+ *
+ * @constructor
+ * Constructor.
+ * @param {AuthToken} authToken a valid AuthToken object
+ */
+function Identity(authToken) {
+  this.authToken = authToken;
+}
+
+<span id='Identity-method-listTenants'>/**
+</span> * Get a list of tenants in the current account.
+ *
+ * @param {Function} callback `callback(err, tenantsArray)`
+ * @param {Mixed} callback.err
+ * @param {Object[]} callback.tenantsArray example response:
+ *
+ *     [
+ *         {
+ *           &quot;id&quot;: &quot;39595655514446&quot;,
+ *           &quot;name&quot;: &quot;Banking Tenant Services&quot;,
+ *           &quot;description&quot;: &quot;Banking Tenant Services for TimeWarner&quot;,
+ *           &quot;enabled&quot;: true,
+ *           &quot;created&quot;: &quot;2011-11-29T16:59:52.635Z&quot;,
+ *           &quot;updated&quot;: &quot;2011-11-29T16:59:52.635Z&quot;
+ *         }
+ *     ]
+ **/
+Identity.prototype.listTenants = function(callback) {
+  var authToken = this.authToken;
+
+  authToken.getServiceEndpoint(SERVICE_TYPE, SERVICE_VERSION,
+    function(err, endpoint)
+  {
+    if (err) { return callback(err); }
+    if (!endpoint) { return callback(new NotProvisioned(SERVICE_TYPE)); }
+
+    var uri = endpoint + '/tenants';
+    transport.GET(uri, authToken, function(err, response, body) {
+      if (err) { return callback(err); }
+      callback(null, body.tenants);
+    });
+  });
+};
+
+module.exports = Identity;
+</pre>
+</body>
+</html>

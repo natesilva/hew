@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">// Wrapper for the ObjectStorage service.
+
+var transport = require('../../transport')
+  , NotProvisioned = require('../../errors').NotProvisioned
+  , NotFound = require('../../errors').NotFound
+  , Container = require('./container')
+  ;
+
+var SERVICE_TYPE = 'object-store';
+var SERVICE_VERSION = '1.0';
+
+<span id='ObjectStorage-method-constructor'><span id='ObjectStorage'>/**
+</span></span> * # Interface to HP Cloud Storage and CDN
+ *
+ * The top level objects in HP Cloud Storage are {@link Container Containers}.
+ * Within containers are stored _objects_ (files).
+ *
+ * Access-control lists (ACLs) can be applied at the container level, allowing
+ * containers to be completely private, completely public, or private-but-shared
+ * with specific HP Cloud tenants.
+ *
+ * Object-level (per-file) ACLs are not supported by HP Cloud’s API.
+ *
+ * HP’s Content Distribution Network (CDN) can also be enabled at the container
+ * level. Note that enabling the CDN clears any previous ACLs and makes the
+ * container public.
+ *
+ * @constructor
+ * Constructor.
+ * @param {AuthToken} authToken a valid AuthToken object
+ */
+function ObjectStorage(authToken) {
+<span id='ObjectStorage-method-listContainers'>  this.authToken = authToken;
+</span>}
+
+/**
+ * List the available containers.
+ * @param {Function} callback `callback(err, containerDataArray)`
+ * @param {Mixed} callback.err
+ * @param {Object[]} callback.containerDataArray example response:
+ *
+ *     [
+ *         {&quot;name&quot;:&quot;test_container_1&quot;, &quot;count&quot;:2, &quot;bytes&quot;:78},
+ *         {&quot;name&quot;:&quot;test_container_2&quot;, &quot;count&quot;:1, &quot;bytes&quot;:17}
+ *     ]
+ */
+ObjectStorage.prototype.listContainers = function(callback) {
+  var authToken = this.authToken;
+  authToken.getServiceEndpoint(SERVICE_TYPE, SERVICE_VERSION,
+    function(err, endpoint)
+  {
+    if (err) { return callback(err); }
+    if (!endpoint) { return callback(new NotProvisioned(SERVICE_TYPE)); }
+
+    transport.GET(endpoint, authToken, function(err, response, body) {
+      if (err) { return callback(err); }
+      callback(null, body);
+    });
+  });
+<span id='ObjectStorage-method-getAllMetadata'>};
+</span>
+/**
+ * Get all account-level metadata associated with the object storage service for
+ * the current account.
+ *
+ * This includes container, object, and byte counts, as well as any user-defined
+ * metadata that has been associated with the account.
+ * @param {Function} callback `callback(err, metadataArray)`
+ * @param {Mixed} callback.err
+ * @param {Object} callback.metadataArray example response:
+ *
+ *     {
+ *         &quot;X-Account-Object-Count&quot;: 21280,
+ *         &quot;X-Account-Bytes-Used&quot;: 3044371826,
+ *         &quot;X-Account-Container-Count&quot;: 2
+ *     }
+ */
+ObjectStorage.prototype.getAllMetadata = function(callback) {
+  var authToken = this.authToken;
+  authToken.getServiceEndpoint(SERVICE_TYPE, SERVICE_VERSION,
+    function(err, endpoint)
+  {
+    if (err) { return callback(err); }
+    if (!endpoint) { return callback(new NotProvisioned(SERVICE_TYPE)); }
+
+    transport.HEAD(endpoint, authToken, function(err, response) {
+      if (err) { return callback(err); }
+      var result = {};
+      Object.keys(response.headers).forEach(function(h) {
+        if (h.match(/^x\-Account\-/)) {
+          result[h] = response.headers[h];
+        }
+      });
+      callback(null, result);
+    });
+  });
+<span id='global-method-normalizeMetaName'>};
+</span>
+/**
+ * Normalize a user-defined metadata item name. Allows users to specify metadata
+ * names as either the name (only) or X-Account-Meta-Name.
+ * @ignore
+ */
+function normalizeMetaName(name) {
+  name = name.toLowerCase();
+  if (!name.match(/^x\-ObjectStorage\-meta\-.+/)) {
+    name = 'x-ObjectStorage-meta-' + name;
+  }
+<span id='global-method-_setHeader'>  return name;
+</span>}
+
+/**
+ * Internal implementation to set an account-level header.
+ * @param {String} name the header to set
+ * @param {String} value the value to set
+ * @param {Function} callback `callback(err)`
+ * @param {Mixed} callback.err
+ * @ignore
+ */
+ObjectStorage.prototype._setHeader = function(name, value, callback) {
+  var that = this;
+  this.authToken.getServiceEndpoint(SERVICE_TYPE, SERVICE_VERSION,
+    function(err, endpoint)
+  {
+    if (err) { return callback(err); }
+    if (!endpoint) { return callback(new NotProvisioned(SERVICE_TYPE)); }
+
+    var options = { headers: {} };
+    options.headers[name] = encodeURIComponent(value);
+
+    transport.POST(endpoint, that.authToken, options, function(err)
+    {
+      if (err) { return callback(err); }
+      callback();
+    });
+  });
+<span id='global-method-_getHeader'>};
+</span>
+/**
+ * Internal implementation to get the value of an account-level header.
+ * @param {String} name the header to get
+ * @param {Function} callback `callback(err, value)`
+ * @param {Mixed} callback.err
+ * @param {String} callback.value
+ * @ignore
+ */
+ObjectStorage.prototype._getHeader = function(name, callback) {
+  name = name.toLowerCase();
+  this.getAllMetadata(function(err, result) {
+    if (err) { return callback(err); }
+    if (name in result) { callback(null, decodeURIComponent(result[name])); }
+    else { callback(); }
+  });
+<span id='ObjectStorage-method-getMetaValue'>};
+</span>
+/**
+ * Get an account-level user-defined metadata value.
+ * @param {String} name the name of the user-defined metadata to get
+ * @param {Function} callback `callback(err, value)`
+ * @param {Mixed} callback.err
+ * @param {String} callback.value
+ */
+ObjectStorage.prototype.getMetaValue = function(name, callback) {
+  name = normalizeMetaName(name);
+  this._getHeader(name, callback);
+<span id='ObjectStorage-method-setMetaValue'>};
+</span>
+/**
+ * Set an account-level user-defined metadata value.
+ * @param {String} name name of the value to set
+ * @param {String} value the value
+ * @param {Function} callback `callback(err)`
+ * @param {Mixed} callback.err
+ */
+ObjectStorage.prototype.setMetaValue = function(name, value, callback) {
+  name = normalizeMetaName(name);
+  this._setHeader(name, value, callback);
+<span id='ObjectStorage-method-deleteMetaValue'>};
+</span>
+/**
+ * Delete an account-level user-defined metadata value.
+ * @param {String} name name of the value to delete
+ * @param {Function} callback `callback(err)`
+ * @param {Mixed} callback.err
+ */
+ObjectStorage.prototype.deleteMetaValue = function(name, callback) {
+  name = normalizeMetaName(name);
+  name = name.slice(0, 2) + 'remove-' + name.slice(2);
+  this._setHeader(name, '', callback);
+<span id='ObjectStorage-method-getContainer'>};
+</span>
+/**
+ * Get a container.
+ * @param {String} cname the container name
+ * @param {Function} callback `callback(err, container)`
+ * @param {Mixed} callback.err
+ * @param {Container} callback.container a {@link Container} object
+ */
+ObjectStorage.prototype.getContainer = function(cname, callback) {
+  var that = this;
+  this.listContainers(function(err, containers) {
+    if (err) { return callback(err); }
+    var found = containers.some(function(el) { return (el.name === cname); });
+    if (!found) { return callback(new NotFound('container ' + cname)); }
+    return callback(null, new Container(that.authToken, cname));
+  });
+<span id='ObjectStorage-method-createContainer'>};
+</span>
+/**
+ * Create a container.
+ * @param {String} cname the container name
+ * @param {Function} callback `callback(err, container)`
+ * @param {Mixed} callback.err
+ * @param {Container} callback.container a {@link Container} object
+ */
+ObjectStorage.prototype.createContainer = function(cname, callback) {
+  var that = this;
+  this.authToken.getServiceEndpoint(SERVICE_TYPE, SERVICE_VERSION,
+    function(err, endpoint)
+  {
+    if (err) { return callback(err); }
+    if (!endpoint) { return callback(new NotProvisioned(SERVICE_TYPE)); }
+
+    var uri = endpoint + '/' + encodeURIComponent(cname);
+    transport.PUT(uri, that.authToken, function(err) {
+      if (err) { return callback(err); }
+      callback(null, new Container(that.authToken, cname));
+    });
+  });
+<span id='ObjectStorage-method-deleteContainer'>};
+</span>
+/**
+ * Delete a container.
+ *
+ * &lt;span style=&quot;color:red;&quot;&gt;**Danger:** This method permanently deletes
+ * data.&lt;/span&gt;
+ * @param {String} cname the container name
+ * @param {Function} callback `callback(err)`
+ * @param {Mixed} callback.err
+ */
+ObjectStorage.prototype.deleteContainer = function(cname, callback) {
+  var that = this;
+  this.authToken.getServiceEndpoint(SERVICE_TYPE, SERVICE_VERSION,
+    function(err, endpoint)
+  {
+    if (err) { return callback(err); }
+    if (!endpoint) { return callback(new NotProvisioned(SERVICE_TYPE)); }
+
+    var uri = endpoint + '/' + encodeURIComponent(cname);
+    transport.DELETE(uri, that.authToken, function(err) {
+      if (err) { return callback(err); }
+      callback();
+    });
+  });
+};
+
+
+module.exports = ObjectStorage;
+</pre>
+</body>
+</html>
