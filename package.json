@@ -1,8 +1,8 @@
 {
   "author": "Nate Silva <nate@natesilva.com>",
   "name": "hew",
-  "description": "Unofficial interface to the HP Cloud API",
-  "version": "0.0.4",
+  "description": "Interface to the HP Cloud API (unofficial)",
+  "version": "0.0.5",
   "homepage": "https://github.com/natesilva/hew",
   "repository": {
     "type": "git",
