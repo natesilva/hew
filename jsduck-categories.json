@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Classes",
+    "groups": [
+      {
+        "name": "Authentication",
+        "classes": [ "AuthToken" ]
+      },
+      {
+        "name": "Services",
+        "classes": [
+          "DNS",
+          "Identity",
+          "Messaging",
+          "ObjectStorage",
+          "Container"
+        ]
+      },
+      {
+        "name": "Object Storage",
+        "classes": [
+          "ObjectStorage",
+          "Container"
+        ]
+      }
+    ]
+  }
+]

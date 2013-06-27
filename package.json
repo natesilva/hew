@@ -1,5 +1,5 @@
 {
-  "author": "Nate Silva <nate@natesilva.com> (http://natesilva.com/)",
+  "author": "Nate Silva <nate@natesilva.com>",
   "name": "hew",
   "description": "Unofficial interface to the HP Cloud API",
   "version": "0.0.4",
@@ -21,16 +21,15 @@
     "test": "./node_modules/.bin/mocha -s 5000 -t 5000 tests"
   },
   "dependencies": {
-    "request": "2.21.0"
+    "request": "~2.21.0"
   },
   "devDependencies": {
     "mocha": "~1.10.0",
     "should": "~1.2.2",
-    "async": "~0.2.9"
+    "ndoc": "~3.1.0"
   },
   "engines": {
     "node": ">=0.8.6"
   },
-  "author": "Nate Silva <nate@natesilva.com>",
   "license": "BSD"
 }

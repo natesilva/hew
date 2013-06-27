@@ -1,33 +1,44 @@
 # Hew
 
-Unofficial Node interface to [HP Cloud](https://www.hpcloud.com/). (The official interface is [here](http://hpcloud.github.io/hpcloud-js/).)
+Hew provides a Node.js API for [HP Cloud](https://www.hpcloud.com/).
 
+<<<<<<< HEAD
 [**Hew API Documentation**](https://github.com/natesilva/hew/blob/master/docs/)
+=======
+* Hew is an independent project not affiliated with HP. The official HP Node.js interface can be found at: <http://hpcloud.github.io/hpcloud-js/>
+>>>>>>> objectStorage
 
-## Status
+## API Documentation
+
+**Hew API Documentation** is at: <http://natesilva.github.io/hew/docs/#!/api>.
+
+## Github
+
+The Hew Github repository is at: <https://github.com/natesilva/hew>.
+
+### Coverage
 
 Currently Hew supports a subset of the [HP Cloud API](http://docs.hpcloud.com/api/):
 
-* ✔ Authentication Tokens — *complete*
-* ✔ Messaging — *complete*
-* ✔ DNS — *complete*
-* Identity — in progress
+* **Authentication Tokens**
+* **Messaging**
+* **DNS**
+* **Object Storage**
+* **CDN** (partial)
+* **Identity** (partial)
 
-## Install
+### Installation
 
     npm install hew
 
-## Example usage
+### Quick start
 
-For clarity, examples use the popular [`async`](https://npmjs.org/package/async) module. `Hew` works just as well without it, or with an alternative async utility.
+Example showing use of the Messaging module:
 
-```js
-var Hew = require('hew')
-  , async = require('async')
-  ;
+```
+var Hew = require('hew');
 
-// things you need to set
-var yourRegion = Hew.DEFAULT_REGION;
+var yourRegion = Hew.AuthToken.DEFAULT_REGION;
 var yourAccessKey = '…';
 var yourSecretKey = '…';
 var yourTenantName = '…';
@@ -37,49 +48,45 @@ var qname = 'my-test-message-queue';
 var token = new Hew.AuthToken(yourRegion, yourAccessKey, yourSecretKey,
   yourTenantName);
 
-// create a Messaging controller
+// create the Messaging controller
 var messaging = new Hew.Messaging(token);
 
-async.series([
-  // create the test queue
-  function(cb) { messaging.createQueue(qname, cb); },
+// create a test queue
+messaging.createQueue(qname, function(err) {
+  if (err) { return console.error(err); }
+  console.log('test queue created');
 
-  // post a message to the queue
-  function(cb) {
-    var message = {
-      temperature: 22,
-      scale: 'Celsius',
-      weather: 'sunny'
-    };
-    messaging.send(qname, message, cb);
-  },
+  // send a message
+  var message = { location: 'Palo Alto', temperature: 22, units: 'C' };
+  messaging.send(qname, message, function(err, messageId) {
+    if (err) { return console.error(err); }
+    console.log('message was posted, with ID', messageId);
 
-  // retrieve a message from the queue
-  function(cb) {
+    // receive a message
     messaging.receive(qname, function(err, message) {
-      if (err) { return cb(err); }
-      console.log(message);
-      cb();
+      if (err) { return console.error(err); }
+      console.log('message received:', message.body);
+      // prints: { location: 'Palo Alto', temperature: 22, units: 'C' }
+
+      // delete the test queue
+      messaging.deleteQueue(qname, function(err) {
+        if (err) { return console.error(err); }
+        console.log('test queue deleted');
+      });
     });
-  },
-
-  // delete the test queue
-  function(cb) { messaging.deleteQueue(qname, cb); }
-],
-function(err) {
-  if (err) { console.error('error:', err); }
-  else { console.log('done'); }
+  });
 });
-
 ```
 
-## Unit tests
+### Running unit tests
 
-**Warning:** Do not run unit tests against your production HP Cloud account. Create an additional account for testing. Testing will create, update and delete resources in your HP Cloud account. While the tests try to avoid affecting “real” data, and they do clean up after themselves, there is no guarantee that everything will work properly.
+**Warning:** Do not run unit tests against your production HP Cloud account. Testing will create, update and delete resources in your account, including very large files for testing object storage.
+
+To run unit tests:
 
 1. Check out the Hew git repo.
 1. Create `tests/config.json` (an example is provided).
 1. Add the following key to `tests/config.json`:
-  * `"i-created-this-account-for-testing-only": true`
+    * `"i-created-this-account-for-testing-only": true`
 1. From the the top of the repo, run `npm install`.
 1. From the the top of the repo, run `npm test`.
