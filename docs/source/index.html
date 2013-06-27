@@ -104,7 +104,7 @@ ObjectStorage.prototype.getAllMetadata = function(callback) {
       if (err) { return callback(err); }
       var result = {};
       Object.keys(response.headers).forEach(function(h) {
-        if (h.match(/^x\-Account\-/)) {
+        if (h.match(/^x\-account\-/)) {
           result[h] = response.headers[h];
         }
       });
@@ -120,8 +120,8 @@ ObjectStorage.prototype.getAllMetadata = function(callback) {
  */
 function normalizeMetaName(name) {
   name = name.toLowerCase();
-  if (!name.match(/^x\-ObjectStorage\-meta\-.+/)) {
-    name = 'x-ObjectStorage-meta-' + name;
+  if (!name.match(/^x\-account\-meta\-.+/)) {
+    name = 'x-account-meta-' + name;
   }
 <span id='global-method-_setHeader'>  return name;
 </span>}
@@ -247,7 +247,7 @@ ObjectStorage.prototype.createContainer = function(cname, callback) {
 <span id='ObjectStorage-method-deleteContainer'>};
 </span>
 /**
- * Delete a container.
+ * Delete a container. A container cannot be deleted if it contains any objects.
  *
  * &lt;span style=&quot;color:red;&quot;&gt;**Danger:** This method permanently deletes
  * data.&lt;/span&gt;
@@ -269,8 +269,42 @@ ObjectStorage.prototype.deleteContainer = function(cname, callback) {
       callback();
     });
   });
-};
+<span id='ObjectStorage-method-deleteContainerAndAllContents'>};
+</span>
+/**
+ * Delete a container **and all its contents**. Dangerous!
+ *
+ * &lt;span style=&quot;color:red;&quot;&gt;**Danger:** This method permanently deletes
+ * data.&lt;/span&gt;
+ * @param {String} cname the container name
+ * @param {Function} callback `callback(err)`
+ * @param {Mixed} callback.err
+ */
+ObjectStorage.prototype.deleteContainerAndAllContents =
+  function(cname, callback)
+{
+  var self = this;
 
+  self.getContainer(cname, function(err, container) {
+    if (err) { return callback(err); }
+
+    container.listObjects(function(err, containerItems) {
+
+      var deleteItems = function(items, index, cb) {
+        if (index &gt;= items.length) { return cb(); }
+        container.delete(items[index].name, function(err) {
+          if (err) { return cb(err); }
+          deleteItems(items, index + 1, cb);
+        });
+      };
+
+      deleteItems(containerItems, 0, function(err) {
+        if (err) { return callback(err); }
+        self.deleteContainer(cname, callback);
+      })
+    });
+  });
+};
 
 module.exports = ObjectStorage;
 </pre>
