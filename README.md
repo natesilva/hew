@@ -2,19 +2,15 @@
 
 Hew provides a Node.js API for [HP Cloud](https://www.hpcloud.com/).
 
-<<<<<<< HEAD
-[**Hew API Documentation**](https://github.com/natesilva/hew/blob/master/docs/)
-=======
 * Hew is an independent project not affiliated with HP. The official HP Node.js interface can be found at: <http://hpcloud.github.io/hpcloud-js/>
->>>>>>> objectStorage
 
 ## API Documentation
 
-**Hew API Documentation** is at: <http://natesilva.github.io/hew/docs/#!/api>.
+**Hew API Documentation** is at: <http://natesilva.github.io/hew/docs/#!/api>
 
 ## Github
 
-The Hew Github repository is at: <https://github.com/natesilva/hew>.
+The Hew Github repository is at: <https://github.com/natesilva/hew>
 
 ### Coverage
 
