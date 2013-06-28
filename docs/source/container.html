@@ -708,7 +708,7 @@ Container.prototype.getStream = function(oname, callback) {
   this.getPublicUrl(function(err, endpoint) {
     if (err) { return callback(err); }
 
-    var options = { stream: true };
+    var options = { stream: true, headers: { 'Accept': '*/*' } };
 
     endpoint += '/' + encodeURI(oname);
     transport.GET(endpoint, that.authToken, options, function(err, stream)
@@ -726,14 +726,14 @@ Container.prototype.getStream = function(oname, callback) {
  * @param {Mixed} callback.err
  * @param {Object} callback.headers the headers associated with the request,
  *     such as `Content-Type`
- * @param {Stream} callback.buffer a Node.js Buffer.
+ * @param {Buffer} callback.buffer a Node.js Buffer.
  */
 Container.prototype.get = function(oname, callback) {
   var that = this;
   this.getPublicUrl(function(err, endpoint) {
     if (err) { return callback(err); }
 
-    var options = { buffer: true };
+    var options = { buffer: true, headers: { 'Accept': '*/*' } };
 
     endpoint += '/' + encodeURI(oname);
     transport.GET(endpoint, that.authToken, options,

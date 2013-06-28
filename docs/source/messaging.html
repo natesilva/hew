@@ -17,6 +17,7 @@
 <body onload="prettyPrint(); highlight();">
   <pre class="prettyprint lang-js">var transport = require('../transport')
   , NotProvisioned = require('../errors').NotProvisioned
+  , ServiceError = require('../errors').ServiceError
   ;
 
 var SERVICE_TYPE = 'hpext:messaging';
@@ -211,7 +212,16 @@ Messaging.prototype.send = function(qname, data, callback) {
 Messaging.prototype.receive = function(qname, callback) {
   this.receiveString(qname, function(err, result) {
     if (err) { return callback(err); }
-    if (result &amp;&amp; result.body) { result.body = JSON.parse(result.body); }
+    if (result &amp;&amp; result.body) {
+      try {
+        result.body = JSON.parse(result.body);
+      } catch (err) {
+        var e = new ServiceError('invalid JSON message body');
+        e.body = result.body;
+        e.outerError = err;
+        return callback(e);
+      }
+    }
     callback(null, result);
   });
 };

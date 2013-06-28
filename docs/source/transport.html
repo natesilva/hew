@@ -40,6 +40,7 @@ function sendRequest(tokenId, options, stream, callback) {
   } else {
     // caller wants us to return response and body objects
     request(options, function(err, response, body) {
+      if (err) { return callback(err); }
       if (response.statusCode &lt; 200 || response.statusCode &gt; 299) {
         var e = new HewError();
         e.body = body;
@@ -63,18 +64,30 @@ function makeRequest(method, uri, authToken, config, callback) {
   }
   config = config || {};
 
+  // convert header names to lowercase to ease upcoming checks
+  var headers = {};
+  if (config.headers) {
+    Object.keys(config.headers).forEach(function(key) {
+      headers[key.toLowerCase()] = config.headers[key];
+    });
+  }
+
   // configure the HTTP request
   var options = {
     method: method,
     uri: uri,
-    // strictSSL: true,
-    strictSSL: false,
-    headers: config.headers || {},
+    strictSSL: true,
+    headers: headers,
     timeout: 3600000
-    // timeout: 0
   };
 
-  options.headers['User-Agent'] = USER_AGENT;
+  if (!('user-agent' in options.headers)) {
+    options.headers['user-agent'] = USER_AGENT;
+  }
+
+  if (!('accept' in options.headers)) {
+    options.headers['accept'] = 'application/json';
+  }
 
   if (config.body) {
     options.body = config.body;
