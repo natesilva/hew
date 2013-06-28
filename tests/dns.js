@@ -61,6 +61,9 @@ describe('DNS', function() {
         should.not.exist(err);
         should.exist(result);
         result.should.not.be.empty;
+        result.should.be.an.instanceOf(Array);
+        var names = result.map(function(x) { return x.name; });
+        names.should.include(dname);
         done();
       });
     });
@@ -100,6 +103,7 @@ describe('DNS', function() {
         should.not.exist(err);
         should.exist(result);
         result.should.not.be.empty;
+        result.should.be.an.instanceOf(Array);
         done();
       });
     });
@@ -110,9 +114,7 @@ describe('DNS', function() {
       var type = 'TXT';
       var data = '"v=spf1 -all"';
       var ttl = 300;
-      dns.createRecord(dname, dname, 'TXT', '"v=spf1 -all"', ttl,
-        function(err, result1)
-      {
+      dns.createRecord(dname, dname, 'TXT', data, ttl, function(err, result1) {
         should.not.exist(err);
         should.exist(result1);
         result1.name.should.equal(dname);
