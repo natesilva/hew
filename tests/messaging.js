@@ -23,7 +23,7 @@ try {
 function randomName() {
   var shasum = crypto.createHash('sha1');
   shasum.update(crypto.randomBytes(512));
-  return shasum.digest('hex');
+  return 'test-' + shasum.digest('hex').slice(0, 10);
 }
 
 describe('Messaging', function() {
