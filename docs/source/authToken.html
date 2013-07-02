@@ -38,7 +38,7 @@ var TOKEN_EXPIRE_EARLY = 10;
  * This class handles authentication on behalf of the service classes in the Hew
  * library.
  *
- * You’ll always need to create an instance of `AuthToken`, which you can then
+ * You'll always need to create an instance of `AuthToken`, which you can then
  * pass to constructors of service classes.
  *
  * Other than the constructor, most of the methods in this class are meant for
@@ -61,7 +61,7 @@ var TOKEN_EXPIRE_EARLY = 10;
  * @param {String} accessKey
  * @param {String} secretKey
  * @param {String} [tenant] either the tenant name or its ID (also known as
- *     “project name” and “project ID” in some parts of the HP Cloud UI)
+ *     &quot;project name&quot; and &quot;project ID&quot; in some parts of the HP Cloud UI)
  */
 function AuthToken(region, accessKey, secretKey, tenant) {
   this.region = region || AuthToken.DEFAULT_REGION;
@@ -70,25 +70,26 @@ function AuthToken(region, accessKey, secretKey, tenant) {
   this.tokenId = null;
   this.expireAt = 0;
   this.serviceCatalog = null;
+  this.tenant = null;
 
   if (tenant) {
     if (tenant.match(/^\d+$/)) {
       this.tenantId = tenant;
     } else {
       this.tenantName = tenant;
-<span id='AuthToken-property-DEFAULT_REGION'>    }
-</span>  }
+    }
+  }
 }
 
-/**
- * @property {String} [=&quot;region-a.geo-1&quot;]
+<span id='AuthToken-property-DEFAULT_REGION'>/**
+</span> * @property {String} [=&quot;region-a.geo-1&quot;]
  * Default region for new connections.
  * @readonly
  */
-<span id='global-method-_authImpl'>AuthToken.DEFAULT_REGION = 'region-a.geo-1';
-</span>
-/**
- * Internal auth implementation.
+AuthToken.DEFAULT_REGION = 'region-a.geo-1';
+
+<span id='global-method-_authImpl'>/**
+</span> * Internal auth implementation.
  * @param {Function} callback `callback(err, tokenId)`
  * @param {Mixed} callback.err
  * @param {String} callback.tokenId
@@ -124,12 +125,13 @@ AuthToken.prototype._authImpl = function(callback) {
     self.expireAt = (new Date(body.access.token.expires).getTime());
     self.expireAt -= TOKEN_EXPIRE_EARLY * 1000;
     self.serviceCatalog = body.access.serviceCatalog;
+    self.tenant = body.access.token.tenant;
     callback(null, self.tokenId);
-<span id='AuthToken-method-getTokenId'>  });
-</span>};
+  });
+};
 
-/**
- * Get the current auth token ID.
+<span id='AuthToken-method-getTokenId'>/**
+</span> * Get the current auth token ID.
  * @param {Function} callback `callback(err, tokenId)`
  * @param {Mixed} callback.err
  * @param {String} callback.tokenId
@@ -138,11 +140,11 @@ AuthToken.prototype.getTokenId = function(callback) {
   if (this.tokenId &amp;&amp; Date.now() &lt; this.expireAt) {
     return callback(null, this.tokenId);
   }
-<span id='AuthToken-method-getServiceEndpoint'>  this._authImpl(callback);   // [re-]acquire the token
-</span>};
+  this._authImpl(callback);   // [re-]acquire the token
+};
 
-/**
- * Get the public endpoint URL for the given service in the current region.
+<span id='AuthToken-method-getServiceEndpoint'>/**
+</span> * Get the public endpoint URL for the given service in the current region.
  * @param {String} type internal service identifier, such as `identity` or
  *     `hpext:dns`
  * @param {String} versionId service version to retrieve, such as `1.1` or `2.0`

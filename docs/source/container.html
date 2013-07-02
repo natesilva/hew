@@ -22,6 +22,7 @@
   , crypto = require('crypto')
   , HewError = require('../../errors').HewError
   , HashingPassThroughStream = require('./hashingPassThroughStream')
+  , url = require('url')
   ;
 
 var SERVICE_TYPE = 'object-store';
@@ -565,8 +566,8 @@ Container.prototype.isCdnEnabled = function(callback) {
  * @param {Object} callback.cdnUrlsObject example response:
  *
  *     {
- *         cdnUri: &quot;http://…&quot;,
- *         cdnSslUri: &quot;https://…&quot;,
+ *         cdnUri: &quot;http://...&quot;,
+ *         cdnSslUri: &quot;https://...&quot;,
  *     }
  */
 Container.prototype.enableCdn = function(ttl, callback) {
@@ -598,10 +599,10 @@ Container.prototype.enableCdn = function(ttl, callback) {
       callback(null, result);
     });
   });
-<span id='Container-method-disableCdn'>};
-</span>
-/**
- * Disable CDN for this container.
+};
+
+<span id='Container-method-disableCdn'>/**
+</span> * Disable CDN for this container.
  * @param {Function} callback `callback(err)`
  * @param {Mixed} callback.err
  */
@@ -621,10 +622,10 @@ Container.prototype.disableCdn = function(callback) {
       callback();
     });
   });
-<span id='Container-method-updateCdnTtl'>};
-</span>
-/**
- * Update the TTL value for the CDN. (How long the CDN should cache items before
+};
+
+<span id='Container-method-updateCdnTtl'>/**
+</span> * Update the TTL value for the CDN. (How long the CDN should cache items before
  * re-requesting them from the source contianer.)
  * @param {Number} ttl the new TTL
  * @param {Function} callback `callback(err, cdnUrlsObject)`
@@ -632,8 +633,8 @@ Container.prototype.disableCdn = function(callback) {
  * @param {Object} callback.cdnUrlsObject example response:
  *
  *     {
- *         cdnUri: &quot;http://…&quot;,
- *         cdnSslUri: &quot;https://…&quot;,
+ *         cdnUri: &quot;http://...&quot;,
+ *         cdnSslUri: &quot;https://...&quot;,
  *     }
  */
 Container.prototype.updateCdnTtl = function(ttl, callback) {
@@ -658,18 +659,18 @@ Container.prototype.updateCdnTtl = function(ttl, callback) {
       };
       callback(null, result);
     });
-<span id='Container-method-getCdnConfig'>  });
-</span>};
+  });
+};
 
-/**
- * Get the current CDN configuration.
+<span id='Container-method-getCdnConfig'>/**
+</span> * Get the current CDN configuration.
  * @param {Function} callback `callback(err, cdnConfigObject)`
  * @param {Mixed} callback.err
  * @param {Object} callback.cdnUrlsObject example response:
  *
  *     {
- *         cdnUri: &quot;http://…&quot;,
- *         cdnSslUri: &quot;https://…&quot;,
+ *         cdnUri: &quot;http://...&quot;,
+ *         cdnSslUri: &quot;https://...&quot;,
  *         ttl: 3600
  *     }
  */
@@ -692,12 +693,12 @@ Container.prototype.getCdnConfig = function(callback) {
         ttl: parseInt(response.headers['x-ttl'], 10)
       };
       callback(null, result);
-<span id='Container-method-getStream'>    });
-</span>  });
+    });
+  });
 };
 
-/**
- * Get an object (file) stored in the container as a pipe()-able Node.js stream.
+<span id='Container-method-getStream'>/**
+</span> * Get an object (file) stored in the container as a pipe()-able Node.js stream.
  * @param {String} oname the object name
  * @param {Function} callback `callback(err, stream)`
  * @param {Mixed} callback.err
@@ -715,12 +716,12 @@ Container.prototype.getStream = function(oname, callback) {
     {
       if (err) { return callback(err); }
       callback(null, stream);
-<span id='Container-method-get'>    });
-</span>  });
+    });
+  });
 };
 
-/**
- * Get an object (file) stored in the container as a Node.js Buffer.
+<span id='Container-method-get'>/**
+</span> * Get an object (file) stored in the container as a Node.js Buffer.
  * @param {String} oname the object name
  * @param {Function} callback `callback(err, headers, buffer)`
  * @param {Mixed} callback.err
@@ -741,12 +742,12 @@ Container.prototype.get = function(oname, callback) {
     {
       if (err) { return callback(err); }
       callback(null, response.headers, body);
-<span id='Container-method-put'>    });
-</span>  });
+    });
+  });
 };
 
-/**
- * Upload an object (file) to the container. The file contents are passed as
+<span id='Container-method-put'>/**
+</span> * Upload an object (file) to the container. The file contents are passed as
  * either a `Buffer` or a string.
  * @param {String} oname the object name
  * @param {Buffer | String} fileContents the file contents
@@ -791,13 +792,13 @@ Container.prototype.put = function(oname, fileContents, contentType,
         return callback(e);
       }
       callback();
-<span id='Container-method-putStream'>    });
-</span>
+    });
+
   });
 };
 
-/**
- * Upload an object (file) to the container. The file contents are passed as a
+<span id='Container-method-putStream'>/**
+</span> * Upload an object (file) to the container. The file contents are passed as a
  * readable Node.js `Stream`.
  * @param {String} oname the object name
  * @param {Stream} fileContents the file contents
@@ -837,17 +838,17 @@ Container.prototype.putStream = function(oname, stream, contentType, callback)
           callback();
         })
       ;
-<span id='Container-method-delete'>    });
-</span>  });
+    });
+  });
 };
 
-/**
- * Delete an object (file).
+<span id='Container-method-deleteObject'>/**
+</span> * Delete an object (file).
  * @param {String} oname the object name
  * @param {Function} callback `callback(err)`
  * @param {Mixed} callback.err
  */
-Container.prototype.delete = function(oname, callback) {
+Container.prototype.deleteObject = function(oname, callback) {
   var that = this;
   this.getPublicUrl(function(err, endpoint) {
     if (err) { return callback(err); }
@@ -858,6 +859,48 @@ Container.prototype.delete = function(oname, callback) {
     transport.DELETE(endpoint, that.authToken, options, callback);
   });
 };
+
+// &quot;delete&quot; is a reserved word, but keep this for backward compat.
+Container.prototype['delete'] = Container.prototype.deleteObject;
+
+<span id='Container-method-getTempUrl'>/**
+</span> * Return a temporary URL for an object.
+ * @param {String} oname the object name
+ * @param {Number} ttl how long (in seconds) the URL will remain valid
+ * @param {String} [method=&quot;GET&quot;] HTTP method for which the URL will be valid
+ * @param {Function} callback `callback(err, url)`
+ * @param {Mixed} callback.err
+ * @param {String} callback.url the temporary URL
+ * @new
+ */
+Container.prototype.getTempUrl = function(oname, ttl, method, callback) {
+  if (typeof method === 'function') {
+    callback = method;
+    method = 'GET';
+  }
+
+  var self = this;
+  self.getPublicUrl(function(err, endpoint) {
+    endpoint += '/' + encodeURI(oname);
+    var parts = url.parse(endpoint);
+
+    var expires = Math.floor(Date.now() / 1000) + ttl;
+    var hmacBody = method + '\n' + expires + '\n' + parts.pathname;
+
+    var hmac = crypto.createHmac('sha1', self.authToken.secretKey);
+    hmac.update(hmacBody);
+    var sig = self.authToken.tenant.id + ':' + self.authToken.accessKey + ':' +
+      hmac.digest('hex');
+
+    parts.query = {
+      temp_url_sig: sig,
+      temp_url_expires: expires
+    };
+
+    callback(null, url.format(parts));
+  });
+};
+
 
 module.exports = Container;
 </pre>
