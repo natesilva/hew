@@ -127,7 +127,7 @@ describe('Object Storage', function() {
       os.getContainer(cname, function(err, cont) {
         should.not.exist(err);
         should.exist(cont);
-        cont.should.be.an.instanceOf(Hew.Container);
+        cont.should.be.an.instanceOf(Hew.ObjectStorage.Container);
         done();
       });
     });
