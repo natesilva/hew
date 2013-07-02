@@ -131,7 +131,13 @@ describe('Object Storage', function() {
         done();
       });
     });
+ });
 
+ describe('test DEPRECATED object methods on the container (use StoredObject ' +
+   'instead)', function()
+{
+    // N.B.: The following test uses deprecated methods.
+    // See storedObject.js for tests using the current methods.
     it('should upload and download a file as a Buffer', function(done)
     {
       var contents = fs.readFileSync(path.join(__dirname, 'objectStorage.js'));
@@ -164,6 +170,8 @@ describe('Object Storage', function() {
       });
     });
 
+    // N.B.: The following test uses deprecated methods.
+    // See storedObject.js for tests using the current methods.
     it('should upload and download a file as a Stream', function(done)
     {
       var contents = fs.createReadStream(path.join(__dirname, 'dns.js'));
@@ -197,6 +205,8 @@ describe('Object Storage', function() {
       });
     });
 
+    // N.B.: The following test uses deprecated methods.
+    // See storedObject.js for tests using the current methods.
     it('should download a file from a tempURL while the URL is valid',
       function(done)
     {
@@ -224,11 +234,13 @@ describe('Object Storage', function() {
               response.should.not.be.within(200, 299);
               done();
             });
-          }, 5000);
+          }, 6000);
         });
       });
     });
 
+    // N.B.: The following test uses deprecated methods.
+    // See storedObject.js for tests using the current methods.
     it('should retrieve object headers', function(done) {
       container.getObjectHeaders('authToken.js', function(err, headers) {
         if (err) { return done(err); }
@@ -238,6 +250,8 @@ describe('Object Storage', function() {
       });
     });
 
+    // N.B.: The following test uses deprecated methods.
+    // See storedObject.js for tests using the current methods.
     it('should set and retrieve an object header', function(done) {
       var filename = 'authToken.js';
       var header = 'Content-Type';
@@ -260,6 +274,8 @@ describe('Object Storage', function() {
 
     });
 
+    // N.B.: The following test uses deprecated methods.
+    // See storedObject.js for tests using the current methods.
     it('should set and retrieve object metadata', function(done) {
       var filename = 'authToken.js';
 
@@ -303,6 +319,8 @@ describe('Object Storage', function() {
       ;
     });
 
+    // N.B.: The following test uses deprecated methods.
+    // See storedObject.js for tests using the current methods.
     it('should self destruct', function(done) {
       var filename = 'authToken.js';
 
@@ -314,7 +332,7 @@ describe('Object Storage', function() {
         .seq(function() {
           should.exist(this.vars.contentType1);   // should still exist
           // wait for deletion and continue
-          setTimeout(this, 5000);
+          setTimeout(this, 6000);
         })
         .seq('contentType2', function() {
           container.getObjectHeader(filename, 'Content-Type', function(err) {
