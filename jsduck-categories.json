@@ -20,7 +20,8 @@
         "classes": [
           "ObjectStorage",
           "ObjectStorage.Container",
-          "ObjectStorage.StoredObject"
+          "ObjectStorage.StoredObject",
+          "ObjectStorage.Permissions"
         ]
       }
     ]
