@@ -20,7 +20,6 @@
 var transport = require('../../transport')
   , NotProvisioned = require('../../errors').NotProvisioned
   , NotFound = require('../../errors').NotFound
-  , Container = require('./container')
   ;
 
 var SERVICE_TYPE = 'object-store';
@@ -29,8 +28,9 @@ var SERVICE_VERSION = '1.0';
 <span id='ObjectStorage-method-constructor'><span id='ObjectStorage'>/**
 </span></span> * # Interface to HP Cloud Storage and CDN
  *
- * The top level objects in HP Cloud Storage are {@link Container Containers}.
- * Within containers are stored _objects_ (files).
+ * The top level objects in HP Cloud Storage are
+ * {@link ObjectStorage.Container Containers}. Within containers are stored
+ * _objects_ (files).
  *
  * Access-control lists (ACLs) can be applied at the container level, allowing
  * containers to be completely private, completely public, or private-but-shared
@@ -211,7 +211,8 @@ ObjectStorage.prototype.deleteMetaValue = function(name, callback) {
  * @param {String} cname the container name
  * @param {Function} callback `callback(err, container)`
  * @param {Mixed} callback.err
- * @param {Container} callback.container a {@link Container} object
+ * @param {ObjectStorage.Container} callback.container an
+ *     {@link ObjectStorage.Container} object
  */
 ObjectStorage.prototype.getContainer = function(cname, callback) {
   var that = this;
@@ -219,7 +220,7 @@ ObjectStorage.prototype.getContainer = function(cname, callback) {
     if (err) { return callback(err); }
     var found = containers.some(function(el) { return (el.name === cname); });
     if (!found) { return callback(new NotFound('container ' + cname)); }
-    return callback(null, new Container(that.authToken, cname));
+    return callback(null, new ObjectStorage.Container(that.authToken, cname));
   });
 <span id='ObjectStorage-method-createContainer'>};
 </span>
@@ -228,7 +229,8 @@ ObjectStorage.prototype.getContainer = function(cname, callback) {
  * @param {String} cname the container name
  * @param {Function} callback `callback(err, container)`
  * @param {Mixed} callback.err
- * @param {Container} callback.container a {@link Container} object
+ * @param {ObjectStorage.Container} callback.container an
+ *     {@link ObjectStorage.Container} object
  */
 ObjectStorage.prototype.createContainer = function(cname, callback) {
   var that = this;
@@ -241,7 +243,7 @@ ObjectStorage.prototype.createContainer = function(cname, callback) {
     var uri = endpoint + '/' + encodeURIComponent(cname);
     transport.PUT(uri, that.authToken, function(err) {
       if (err) { return callback(err); }
-      callback(null, new Container(that.authToken, cname));
+      callback(null, new ObjectStorage.Container(that.authToken, cname));
     });
   });
 <span id='ObjectStorage-method-deleteContainer'>};
@@ -306,6 +308,15 @@ ObjectStorage.prototype.deleteContainerAndAllContents =
   });
 };
 
+// ******************************************************************
+// Other classes to attach to this one.
+// ******************************************************************
+
+ObjectStorage.Container = require('./container');
+ObjectStorage.StoredObject = require('./storedObject');
+ObjectStorage.Permissions = require('./permissions');
+
+// export it
 module.exports = ObjectStorage;
 </pre>
 </body>

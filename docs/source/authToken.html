@@ -62,8 +62,10 @@ var TOKEN_EXPIRE_EARLY = 10;
  * @param {String} secretKey
  * @param {String} [tenant] either the tenant name or its ID (also known as
  *     &quot;project name&quot; and &quot;project ID&quot; in some parts of the HP Cloud UI)
+ * @param {String} [proxy] URL of an HTTP proxy to be used: causes strict SSL
+*      certificate verification to be disabled!
  */
-function AuthToken(region, accessKey, secretKey, tenant) {
+function AuthToken(region, accessKey, secretKey, tenant, proxy) {
   this.region = region || AuthToken.DEFAULT_REGION;
   this.accessKey = accessKey;
   this.secretKey = secretKey;
@@ -71,6 +73,7 @@ function AuthToken(region, accessKey, secretKey, tenant) {
   this.expireAt = 0;
   this.serviceCatalog = null;
   this.tenant = null;
+  this.proxy = proxy || null;
 
   if (tenant) {
     if (tenant.match(/^\d+$/)) {

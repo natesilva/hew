@@ -31,6 +31,18 @@ var USER_AGENT = packageJson.name + '-' + packageJson.version +
   ' (https://github.com/natesilva/hew)';
 
 
+function getHeader(headers, headerToGet) {
+  headerToGet = headerToGet.toLowerCase();
+  var keys = Object.keys(headers);
+  for (var index=0, len=keys.length; index !== len; ++index) {
+    var key = keys[index];
+    if (key.toLowerCase() === headerToGet) {
+      return headers[key];
+    }
+  }
+  return null;
+}
+
 function sendRequest(tokenId, options, stream, callback) {
   if (tokenId) { options.headers['X-Auth-Token'] = tokenId; }
 
@@ -42,7 +54,10 @@ function sendRequest(tokenId, options, stream, callback) {
     request(options, function(err, response, body) {
       if (err) { return callback(err); }
       if (response.statusCode &lt; 200 || response.statusCode &gt; 299) {
-        var e = new HewError();
+        var message = options.method + ' to ' + options.uri + ' returned ' +
+          response.statusCode;
+        var e = new HewError(message);
+        e.statusCode = response.statusCode;
         e.body = body;
         return callback(e);
       }
@@ -86,13 +101,21 @@ function makeRequest(method, uri, authToken, config, callback) {
   }
 
   if (!('accept' in options.headers)) {
-    options.headers['accept'] = 'application/json';
+    options.headers.accept = 'application/json';
+  }
+
+  if (authToken &amp;&amp; authToken.proxy) {
+    options.proxy = authToken.proxy;
+    options.strictSSL = false;
   }
 
   if (config.body) {
     options.body = config.body;
   } else if (!config.stream) {
-    options.json = config.json || {};
+    var contentType = getHeader(options.headers, 'content-type');
+    if (!contentType || contentType === 'application/json') {
+      options.json = config.json || {};
+    }
   }
   if (config.buffer) { options.encoding = null; }
 
