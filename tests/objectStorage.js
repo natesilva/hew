@@ -9,6 +9,7 @@ var should = require('should')
   , fs = require('fs')
   , Stream = require('stream')
   , path = require('path')
+  , request = require('request')
   ;
 
 try {
@@ -188,6 +189,38 @@ describe('Object Storage', function() {
               done();
             });
           });
+        });
+      });
+    });
+
+    it('should download a file from a tempURL while the URL is valid',
+      function(done)
+    {
+      container.getTempUrl('objectStorage.js', 5, function(err, tempUrl) {
+        if (err) { return done(err); }
+        request.get(tempUrl, function(err, response, body) {
+          if (err) { return done(err); }
+
+          // downloaded file contents must be identical to uploaded
+          var hash1 = crypto.createHash('sha1');
+          hash1.update(body);
+
+          var contents = fs.readFileSync(path.join(__dirname,
+            'objectStorage.js'));
+          contents.should.be.an.instanceOf(Buffer);
+          var hash2 = crypto.createHash('sha1');
+          hash2.update(contents);
+
+          hash1.digest('hex').should.equal(hash2.digest('hex'));
+
+          // wait for it to expire and ensure it no longer works
+          setTimeout(function() {
+            request.get(tempUrl, function(err, response) {
+              should.not.exist(err);
+              response.should.not.be.within(200, 299);
+              done();
+            });
+          }, 5000);
         });
       });
     });
