@@ -1,6 +1,6 @@
 // Unit tests. Run with mocha.
 
-/*global describe:true it:true before:true*/
+/*global describe:true it:true before:true after:true */
 
 
 var should = require('should')
@@ -10,6 +10,7 @@ var should = require('should')
   , Stream = require('stream')
   , path = require('path')
   , request = require('request')
+  , Seq = require('seq')
   ;
 
 try {
@@ -44,7 +45,10 @@ describe('Object Storage', function() {
     os.createContainer(cname, function(err, cont) {
       if (err) { return done(err); }
       container = cont;
-      done();
+
+      var contents = fs.readFileSync(path.join(__dirname, 'objectStorage.js'));
+      contents.should.be.an.instanceOf(Buffer);
+      container.put('authToken.js', contents, 'application/javascript', done);
     });
   });
 
@@ -223,6 +227,104 @@ describe('Object Storage', function() {
           }, 5000);
         });
       });
+    });
+
+    it('should retrieve object headers', function(done) {
+      container.getObjectHeaders('authToken.js', function(err, headers) {
+        if (err) { return done(err); }
+        should.exist(headers);
+        headers.should.have.property('content-type', 'application/javascript');
+        done();
+      });
+    });
+
+    it('should set and retrieve an object header', function(done) {
+      var filename = 'authToken.js';
+      var header = 'Content-Type';
+      var value = 'application/octet-stream';
+
+      Seq()
+        .seq(function() {
+          container.setObjectHeader(filename, header, value, this);
+        })
+        .seq('actualValue', function() {
+          container.getObjectHeader(filename, header, this);
+        })
+        .seq(function() {
+          should.exist(this.vars.actualValue);
+          this.vars.actualValue.should.equal(value);
+          done();
+        })
+        ['catch'](done)
+      ;
+
+    });
+
+    it('should set and retrieve object metadata', function(done) {
+      var filename = 'authToken.js';
+
+      var name1 = 'For-Testing';
+      var value1 = 'Yes';
+
+      var name2 = 'X-Object-Meta-Foo';
+      var value2 = 'Bar';
+
+      Seq()
+        .seq(function() {
+          container.setObjectMetaValue(filename, name1, value1, this);
+        })
+        .seq(function() {
+          container.setObjectMetaValue(filename, name2, value2, this);
+        })
+        .par('actualValue1', function() {
+          container.getObjectMetaValue(filename, name1, this);
+        })
+        .par('actualValue2', function() {
+          container.getObjectMetaValue(filename, name2, this);
+        })
+        .seq(function() {
+          should.exist(this.vars.actualValue1);
+          should.exist(this.vars.actualValue2);
+          this.vars.actualValue1.should.equal(value1);
+          this.vars.actualValue2.should.equal(value2);
+          this.ok();
+        })
+        .seq(function() {
+          container.deleteObjectMetaValue(filename, name1, this);
+        })
+        .seq('afterDeleteValues', function() {
+          container.getAllObjectMetaValues(filename, this);
+        })
+        .seq(function() {
+          this.vars.afterDeleteValues.should.not.have.ownProperty(name1);
+          done();
+        })
+        ['catch'](done)
+      ;
+    });
+
+    it('should self destruct', function(done) {
+      var filename = 'authToken.js';
+
+      Seq()
+        .seq(function() { container.selfDestruct(filename, 5, this); })
+        .seq('contentType1', function() {
+          container.getObjectHeader(filename, 'Content-Type', this);
+        })
+        .seq(function() {
+          should.exist(this.vars.contentType1);   // should still exist
+          // wait for deletion and continue
+          setTimeout(this, 5000);
+        })
+        .seq('contentType2', function() {
+          container.getObjectHeader(filename, 'Content-Type', function(err) {
+            // should not exist and should have returned err
+            should.exist(err);
+            done();
+          });
+        })
+        ['catch'](done)
+      ;
     });
 
   });
