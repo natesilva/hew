@@ -12,15 +12,15 @@
           "DNS",
           "Identity",
           "Messaging",
-          "ObjectStorage",
-          "Container"
+          "ObjectStorage"
         ]
       },
       {
         "name": "Object Storage",
         "classes": [
           "ObjectStorage",
-          "Container"
+          "ObjectStorage.Container",
+          "ObjectStorage.StoredObject"
         ]
       }
     ]
